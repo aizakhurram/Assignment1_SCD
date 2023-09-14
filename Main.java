@@ -142,53 +142,47 @@ class Library{
          }
     }
 
-// public void editItem(int ID){
-//      Scanner input = new Scanner(System.in);
-//          for(int i=0; i<items.size(); i++ ){
-//             if(items.get(i).id==ID){
-//               System.out.println("What property you want to edit? ");
-//               System.out.println("Press 1 for title, 2 for author and 3 for year of publication");
-//               int choice= input.nextInt();
-//               input.nextLine();
-//               switch (choice){
-//                 case 1:
-//                 System.out.println("Enter new title: ");
-//                 String title= input.nextLine();
-//                 items.get(i).setTitle(title);
-//                 System.out.println("Title Updated");
-//                 break;
-//                 case 2:
-//                 System.out.println("Enter new author: ");
-//                 String author= input.nextLine();
-//                 items.get(i).se(author);
-//                 System.out.println("Author Updated");
-//                 break;
-//                 case 3:
-//                  System.out.println("Enter new year of publication: ");
-//                 String year= input.nextLine();
-//                 items.get(i).setYear(year);
-//                 System.out.println("Year Updated");
-//                 break;
-//                 default:
-//                  System.out.println("Invalid choice. Please try again.");
-//                     break;
+public void editItem(int ID){
+     Scanner input = new Scanner(System.in);
+         for(int i=0; i<items.size(); i++ ){
+            if(items.get(i).id==ID){
+              System.out.println("What property you want to edit? ");
+              System.out.println("Press 1 for title, 2 for author.");
+              int choice= input.nextInt();
+              input.nextLine();
+              switch (choice){
+                case 1:
+                System.out.println("Enter new title: ");
+                String title= input.nextLine();
+                items.get(i).setTitle(title);
+                System.out.println("Title Updated");
+                break;
+                case 2:
+                System.out.println("Enter new author: ");
+                String author= input.nextLine();
+                items.get(i).setAuthor(author);
+                System.out.println("Author Updated");
+                break;
+                default:
+                 System.out.println("Invalid choice. Please try again.");
+                    break;
 
 
-//               }
+              }
              
-//             }
-//             else{
-//                 continue;
-//             }
+            }
+            else{
+                continue;
+            }
              
-//          }
-//           input.close();
+         }
+          input.close();
         
-//         }
+        }
 public void ScanItems(){     
 
         try {
-            // Open the file for reading
+        
             File file = new File("data.txt");
             Scanner scanner = new Scanner(file);
 
@@ -197,7 +191,7 @@ public void ScanItems(){
                 String line = scanner.nextLine();
                 String[] parts = line.split(", "); // Split the line by comma and space
 
-                if (parts.length >= 6) {
+               
                     
                     int itemType = Integer.parseInt(parts[0]);
                     if(itemType==1){
@@ -206,19 +200,34 @@ public void ScanItems(){
                     String itemYear = parts[3];
                     int itemPopularityCount = Integer.parseInt(parts[4]);
                     int itemPrice = Integer.parseInt(parts[5]);
-                    Book book= new Book(itemTitle, itemAuthor, itemYear, false, itemPopularityCount, itemPrice);
+                    Book book= new Book(itemTitle, itemAuthor, itemYear, false,itemPopularityCount, itemPrice);
                     items.add(book);
                     }
                     else if(itemType==2){
                     String itemTitle = parts[1];
+                    String publisherCompany="";
+                    int itemPopularityCount=0;
+                    int itemPrice=0;
                     ArrayList<String> author= new ArrayList<>();
-                    for(int i=2; parts[i].contains("."); i++){
-                      author.add(parts[i]);
-                          
+                    int index=0;
+                    for(int i=2; i<parts.length; i++){
+                         if(parts[i].contains(".")){
+                              index=i;
+                         }
                     }
-                    int itemYear = Integer.parseInt(parts[3]);
-                    int itemPopularityCount = Integer.parseInt(parts[4]);
-                    double itemPrice = Double.parseDouble(parts[5]);
+                    for(int i=2; i<=index; i++){
+                           author.add(parts[i]);
+                    }
+                    
+                    for(int j=index+1; j<parts.length; j++){
+                     publisherCompany = parts[j];
+                    j++;
+                     itemPopularityCount = Integer.parseInt(parts[j]);
+                    j++;
+                     itemPrice = Integer.parseInt(parts[j]);
+                    }
+                    Magazine magazine= new Magazine(itemTitle, publisherCompany, false, itemPopularityCount, itemPrice);
+                    items.add(magazine);
                     }
                      else if(itemType==3){
                     String itemTitle = parts[1];
@@ -233,10 +242,7 @@ public void ScanItems(){
                    
 
                     // Process the read data (you can use these values as needed)
-                   
-                } else {
-                    System.err.println("Invalid line: " + line);
-                }
+              
             }
                 scanner.close();
         } catch (FileNotFoundException e) {
@@ -346,12 +352,12 @@ public class Main{
         do {
            
             System.out.println("Library Management System Menu:");
-            System.out.println("1. Add Book");
-            System.out.println("2. Edit Book");
-            System.out.println("3. Delete Book");
-            System.out.println("4. View All Books");
-            System.out.println("5. View Book by ID");
-            System.out.println("6. Load Books from File");
+            System.out.println("1. Add Item");
+            System.out.println("2. Edit Item");
+            System.out.println("3. Delete Item");
+            System.out.println("4. View All Items");
+            System.out.println("5. View Item by ID");
+            System.out.println("6. Load Items from File");
             System.out.println("7. Hot Picks");
             System.out.println("8. Borrow item");
             System.out.println("9. View Borrowers List");
@@ -379,11 +385,11 @@ public class Main{
                 //     Book book= new Book(title,author,year);
                 //     library.addBook(book);
                 //     break;
-                // case 2:
-                //     System.out.println("Enter the ID of book to be edited: ");
-                //    int viewID=myobj.nextInt();
-                //    library.editBook(viewID);
-                //     break;
+                case 2:
+                   System.out.println("Enter the ID of book to be edited: ");
+                   int viewID=myobj.nextInt();
+                   library.editItem(viewID);
+                    break;
                 case 3:
                    System.out.println("Enter the ID of book to be deleted: ");
                    int ID=myobj.nextInt();
