@@ -73,13 +73,15 @@ class Library{
                      items.get(i).displayInfo();
                 }
         }
-        Scanner myobj=new Scanner(System.in);
+        Scanner obj=new Scanner(System.in);
         System.out.println("Enter the title of item you want to borrow");
-        String title=myobj.nextLine();
+        String tit= obj.nextLine();
+        System.out.println(tit);
         for(int i=0; i<items.size(); i++){
-                if(items.get(i).title==title){
+
+                if(items.get(i).title.equalsIgnoreCase(tit)){
                     for(int j=0; j<borrowers.size(); j++){
-                        if(borrowers.get(j).name==n && borrowers.get(j).borrowedTitle==title){
+                        if(borrowers.get(j).name.equalsIgnoreCase(n) && borrowers.get(j).borrowedTitle.equalsIgnoreCase(tit)){
                             System.out.println("This user has already borrowed that book once.");
                             return false;
                         }
@@ -96,9 +98,9 @@ class Library{
                     return false;
                 }
         }
-        Borrower b= new Borrower(n, title);
+        Borrower b= new Borrower(n, tit);
         borrowers.add(b);
-        myobj.close();
+
         return true;
     }
     public void HotPicks(){
@@ -211,12 +213,12 @@ public void editItem(int ID){
                 items.get(i).setTitle(title);
                 System.out.println("Title Updated");
                 break;
-                case 2:
-                System.out.println("Enter new author: ");
-                String author= input.nextLine();
-                items.get(i).setAuthor(author);
-                System.out.println("Author Updated");
-                break;
+                // case 2:
+                // System.out.println("Enter new author: ");
+                // String author= input.nextLine();
+                // items.get(i).setAuthor(author);
+                // System.out.println("Author Updated");
+              //  break;
                 default:
                  System.out.println("Invalid choice. Please try again.");
                     break;
@@ -240,10 +242,10 @@ public void ScanItems(){
             File file = new File("data.txt");
             Scanner scanner = new Scanner(file);
 
-            // Read and process each line of the file
+            
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] parts = line.split(", "); // Split the line by comma and space
+                String[] parts = line.split(", "); 
 
                
                     
@@ -294,12 +296,7 @@ public void ScanItems(){
                     
                      NewsPaper news= new NewsPaper(itemTitle, Company, date, false, itemPopularityCount);
                      items.add(news);
-                    }
-
-                   
-
-                    // Process the read data (you can use these values as needed)
-              
+                     }
             }
                 scanner.close();
         } catch (FileNotFoundException e) {
