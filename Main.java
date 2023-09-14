@@ -128,7 +128,7 @@ class Library{
 
               Book book= new Book(title, author, year, false, popc, price);
               items.add(book);
-              obj.close();
+              
     }
     public void addMagazine(){
         Scanner obj= new Scanner(System.in);
@@ -136,9 +136,9 @@ class Library{
         String title=obj.nextLine();
         System.out.println("Enter the  publisher company of the Magazine: ");
         String pub=obj.nextLine();
-        System.out.println("Enter the Popularity count of the book: ");
+        System.out.println("Enter the Popularity count of the Magazine: ");
         int popc=obj.nextInt();
-        System.out.println("Enter the price of the book: ");
+        System.out.println("Enter the price of the Magazine: ");
         int price=obj.nextInt();
         Magazine magazine= new Magazine(title, pub, false, popc, price);
 
@@ -148,11 +148,12 @@ class Library{
         for(int i=0; i<size; i++){
             System.out.println("Enter name of Author "+i+" :");
             String name=obj.nextLine();
+            obj.next();
              magazine.addAuthor(name);
         }
     
         items.add(magazine);
-        obj.close();
+        
 }
 public void addNewspaper(){
     Scanner obj= new Scanner(System.in);
@@ -167,7 +168,7 @@ public void addNewspaper(){
     int popc=obj.nextInt(); 
     NewsPaper news= new NewsPaper(title, pub, date, false, popc);
     items.add(news);
-    obj.close();
+    
 }
     public void viewItemByID(int ID){
           for(int i=0; i<items.size(); i++ ){
@@ -280,6 +281,9 @@ public void ScanItems(){
                      itemPrice = Integer.parseInt(parts[j]);
                     }
                     Magazine magazine= new Magazine(itemTitle, publisherCompany, false, itemPopularityCount, itemPrice);
+                    for(int i=0; i<author.size(); i++){
+                           magazine.addAuthor(author.get(i));
+                    }
                     items.add(magazine);
                     }
                      else if(itemType==3){
@@ -430,21 +434,21 @@ public class Main{
             {
                choice = myobj.nextInt();
             }
-            
-            if(myobj.hasNextLine()){
+    
             myobj.nextLine();
-            }
+            
             switch (choice) {
                 case 1:
                     System.out.println("What type of item you want to add? (Book, Magazine, Newspaper): ");
                     String type= myobj.nextLine();
-                    if(type=="Book"){
+                    System.out.println(type);
+                    if(type.equalsIgnoreCase("Book")){
                         library.addBook();
                     }
-                    else if(type=="Magazine"){
+                    else if(type.equalsIgnoreCase("Magazine")){
                         library.addMagazine();
                     }
-                    else if(type=="Newspaper"){
+                    else if(type.equalsIgnoreCase("Newspaper")){
                         library.addNewspaper();
                     } 
                     else{
@@ -504,7 +508,7 @@ public class Main{
           
             
         } while (choice != 0);
-         myobj.close();
+        
        
 
         
