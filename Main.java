@@ -1,138 +1,342 @@
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+interface Configuration{
+    void displayInfo();
+    double calculateCost();
+}
+class Item implements Configuration{
+    public String title;
+    public boolean isBorrowed;
+    public int popCount;
+    public static int nextID=1;
+    public int cost;
+    int id;
+    Item(String t, boolean b, int p, int c){
+        id=nextID++;
+        title=t;
+        isBorrowed=b;
+        popCount=p;
+        cost=c;
+
+    }
+ public int getcost(){
+    return this.cost;
+ }
+ public void setTitle(String t){
+    this.title=t;
+ }
+    @Override
+    public void displayInfo(){
+          System.out.println("Item Info: ");
+          System.out.println("Title: "+title+"  Popularity Count: "+popCount+" Cost: "+cost);
+
+    }
+    @Override
+    public double calculateCost(){
+          return 0;
+    }
+}
+class Borrower{
+    public String name;
+     public String borrowedTitle;
+    Borrower(String n, String b){
+       name=n;
+       borrowedTitle=b;
+    }
+    public void setName(String name){
+        this.name=name;
+    }
+    public void setBorrowed(String b){
+       borrowedTitle=b;
+    }
+    public void display(){
+        System.out.println("Name: "+name+"  borrowed: "+borrowedTitle);
+    }
+
+}
 class Library{
-    public ArrayList<Book> books;
+    public ArrayList<Item> items;
+    public ArrayList<Borrower> borrowers;
      public Library() {
-        books = new ArrayList<>();
+        items = new ArrayList<>();
+        borrowers= new ArrayList<>();
        
     }
-    public void addBook(Book b){
-         books.add(b);
+    public boolean borrowItem(String n){
+        System.out.println("Which Item do you want to Borrow from the available Items: ");
+        for(int i=0; i<items.size(); i++){
+                if(items.get(i).isBorrowed==false){
+                     items.get(i).displayInfo();
+                }
+        }
+        Scanner myobj=new Scanner(System.in);
+        System.out.println("Enter the title of item you want to borrow");
+        String title=myobj.nextLine();
+        for(int i=0; i<items.size(); i++){
+                if(items.get(i).title==title){
+                    for(int j=0; j<borrowers.size(); j++){
+                        if(borrowers.get(j).name==n && borrowers.get(j).borrowedTitle==title){
+                            System.out.println("This user has already borrowed that book once.");
+                            return false;
+                        }
+                        else{
+                              items.get(i).isBorrowed=true;
+                              items.get(i).popCount++;
+                              break;
+                        }
+                    }
+                     
+                }
+                else{
+                    System.out.println("Invalid title");
+                    return false;
+                }
+        }
+        Borrower b= new Borrower(n, title);
+        borrowers.add(b);
+        myobj.close();
+        return true;
     }
-    public void viewBookByID(int ID){
-          for(int i=0; i<books.size(); i++ ){
-            if(books.get(i).id==ID){
-                books.get(i).Display();
+    public void HotPicks(){
+        Comparator<Item> popularityComparator = new Comparator<Item>() {
+            @Override
+            public int compare(Item item1, Item item2) {
+                // Compare items based on their popularity counts
+                return item2.popCount - item1.popCount;
+            }
+        };
+
+        
+        Collections.sort(items, popularityComparator);
+    }
+    public void addItem(Item i){
+
+         items.add(i);
+    }
+    public void viewItemByID(int ID){
+          for(int i=0; i<items.size(); i++ ){
+            if(items.get(i).id==ID){
+                items.get(i).displayInfo();
             }
          }
     }
-    public void viewAllBooks(){
-        System.out.println("Books: ");
-         for(int i=0; i<books.size(); i++ ){
-            books.get(i).Display();
+    public void viewAllItems(){
+        System.out.println("Items: ");
+         for(int i=0; i<items.size(); i++ ){
+            items.get(i).displayInfo();
          }
     }
-    public void deleteBookByID(int ID){
-         for(int i=0; i<books.size(); i++ ){
-            if(books.get(i).id==ID){
-              books.remove(i);
+    public void viewItem(Item i){
+        i.displayInfo();
+    }
+    
+    public void deleteItemByID(int ID){
+         for(int i=0; i<items.size(); i++ ){
+            if(items.get(i).id==ID){
+              items.remove(i);
               System.out.println("Book deleted");
             }
          }
     }
 
-public void editBook(int ID){
-     Scanner input = new Scanner(System.in);
-         for(int i=0; i<books.size(); i++ ){
-            if(books.get(i).id==ID){
-              System.out.println("What property you want to edit? ");
-              System.out.println("Press 1 for title, 2 for author and 3 for year of publication");
-              int choice= input.nextInt();
-              input.nextLine();
-              switch (choice){
-                case 1:
-                System.out.println("Enter new title: ");
-                String title= input.nextLine();
-                books.get(i).setTitle(title);
-                System.out.println("Title Updated");
-                break;
-                case 2:
-                System.out.println("Enter new author: ");
-                String author= input.nextLine();
-                books.get(i).setAuthor(author);
-                System.out.println("Author Updated");
-                break;
-                case 3:
-                 System.out.println("Enter new year of publication: ");
-                String year= input.nextLine();
-                books.get(i).setYear(year);
-                System.out.println("Year Updated");
-                break;
-                default:
-                 System.out.println("Invalid choice. Please try again.");
-                    break;
+// public void editItem(int ID){
+//      Scanner input = new Scanner(System.in);
+//          for(int i=0; i<items.size(); i++ ){
+//             if(items.get(i).id==ID){
+//               System.out.println("What property you want to edit? ");
+//               System.out.println("Press 1 for title, 2 for author and 3 for year of publication");
+//               int choice= input.nextInt();
+//               input.nextLine();
+//               switch (choice){
+//                 case 1:
+//                 System.out.println("Enter new title: ");
+//                 String title= input.nextLine();
+//                 items.get(i).setTitle(title);
+//                 System.out.println("Title Updated");
+//                 break;
+//                 case 2:
+//                 System.out.println("Enter new author: ");
+//                 String author= input.nextLine();
+//                 items.get(i).se(author);
+//                 System.out.println("Author Updated");
+//                 break;
+//                 case 3:
+//                  System.out.println("Enter new year of publication: ");
+//                 String year= input.nextLine();
+//                 items.get(i).setYear(year);
+//                 System.out.println("Year Updated");
+//                 break;
+//                 default:
+//                  System.out.println("Invalid choice. Please try again.");
+//                     break;
 
 
-              }
+//               }
              
-            }
-            else{
-                continue;
-            }
+//             }
+//             else{
+//                 continue;
+//             }
              
-         }
-          input.close();
+//          }
+//           input.close();
         
-        }
-            public void ScanBooks(){
-            String path="books.txt";
-            System.out.println("book opened");
-           List<String[]> data=new ArrayList<>();
-            
-             try {
-            Scanner scanner = new Scanner(new File(path));
-            
+//         }
+public void ScanItems(){     
+
+        try {
+            // Open the file for reading
+            File file = new File("data.txt");
+            Scanner scanner = new Scanner(file);
+
+            // Read and process each line of the file
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
+                String[] parts = line.split(", "); // Split the line by comma and space
 
-                String[] values = line.split(",");
-                data.add(values);
+                if (parts.length >= 6) {
+                    
+                    int itemType = Integer.parseInt(parts[0]);
+                    if(itemType==1){
+                    String itemTitle = parts[1];
+                    String itemAuthor= parts[2];
+                    String itemYear = parts[3];
+                    int itemPopularityCount = Integer.parseInt(parts[4]);
+                    int itemPrice = Integer.parseInt(parts[5]);
+                    Book book= new Book(itemTitle, itemAuthor, itemYear, false, itemPopularityCount, itemPrice);
+                    items.add(book);
+                    }
+                    else if(itemType==2){
+                    String itemTitle = parts[1];
+                    ArrayList<String> author= new ArrayList<>();
+                    for(int i=2; parts[i].contains("."); i++){
+                      author.add(parts[i]);
+                          
+                    }
+                    int itemYear = Integer.parseInt(parts[3]);
+                    int itemPopularityCount = Integer.parseInt(parts[4]);
+                    double itemPrice = Double.parseDouble(parts[5]);
+                    }
+                     else if(itemType==3){
+                    String itemTitle = parts[1];
+                    String Company = parts[2];
+                    int itemPopularityCount = Integer.parseInt(parts[3]);
+                    String date=parts[4];
+                    
+                     NewsPaper news= new NewsPaper(itemTitle, Company, date, false, itemPopularityCount);
+                     items.add(news);
+                    }
+
+                   
+
+                    // Process the read data (you can use these values as needed)
+                   
+                } else {
+                    System.err.println("Invalid line: " + line);
+                }
             }
-            
-            scanner.close();
+                scanner.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("File not found: " + e.getMessage());
         }
-       for (String[] row : data) {
-        String title = row[0];
-        String author = row[1];
-        String year = row[2];
-        Book b = new Book(title, author, year); // Create a new Book object
-        books.add(b);
-       }
+
+
+
+    }
+public void borrowersList(){
+        for(int i=0; i<borrowers.size(); i++){
+          borrowers.get(i).display();
+        }
     }
 };
-class Book{
-    public static int nextID=1;
+class Book extends Item{
     public int type;
-    public int id;
-    public String title;
     public String author;
     public String year;
-    Book(String t, String a, String y){
+    Book(String t, String a, String y, boolean b, int Count, int cost){
+        super(t, b, Count, cost);
      type=1;
-      this.id=nextID++;
-      this.title=t;
+     
       this.author=a;
       this.year=y;
     }
-    public void setTitle(String t){
-        this.title=t;
-    }
+
      public void setAuthor(String a){
         this.author=a;
     }
      public void setYear(String y){
         this.year=y;
     }
-    public void Display() {
+    @Override
+    public void displayInfo() {
        System.out.println("ID: "+id+" Title: "+title+" by "+author+" ("+year+") ");
     }
+    @Override
+    public double calculateCost(){
+    double percentage= 0.2*super.cost;
+    return super.cost+percentage+200;
+     
+    }
 };
-
+class Magazine extends Item{
+    public static int nextID=1;
+    public int type;
+    public ArrayList<String> authors;
+    public String publisherCompany;
+    Magazine(String t, String y, boolean b, int Count, int cost){
+     super(t, b, Count, cost);
+        type=2;
+       authors = new ArrayList<>();
+       publisherCompany=y;
+     
+    }
+    public void addAuthor(String name){
+        authors.add(name);
+    }
+     public void setCompany(String y){
+        this.publisherCompany=y;
+    }
+     @Override
+    public double calculateCost(){
+    
+       return super.cost*super.popCount;
+     
+    }
+    @Override
+    public void displayInfo(){
+        System.out.println("Magazine ID: "+this.id+" Company: "+this.publisherCompany);
+    }
+   
+};
+class NewsPaper extends Item{
+    public static int nextID=1;
+    public int type;
+    public String Date;
+    public String publisherCompany;
+    public final static int cost=15;
+    NewsPaper(String t, String y,String d, boolean b, int Count){
+     super(t, b, Count, cost);
+    type=3;
+    publisherCompany=y;
+     Date=d;
+    }
+    public void setDate(String d){
+        Date=d;
+    }
+   
+     public void setCompany(String y){
+        this.publisherCompany=y;
+    }
+      @Override
+    public double calculateCost(){
+    
+       return cost;
+     
+    }
+};
 public class Main{
    public static void main(String args[]){
         
@@ -148,7 +352,10 @@ public class Main{
             System.out.println("4. View All Books");
             System.out.println("5. View Book by ID");
             System.out.println("6. Load Books from File");
-            System.out.println("7. Exit");
+            System.out.println("7. Hot Picks");
+            System.out.println("8. Borrow item");
+            System.out.println("9. View Borrowers List");
+            System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
             if(myobj.hasNextInt()) 
             {
@@ -159,44 +366,64 @@ public class Main{
             myobj.nextLine();
             }
             switch (choice) {
-                case 1:
-                    System.out.println("Enter the title of the book: ");
-                    String title= myobj.nextLine();
+                // case 1:
+                //     System.out.println("Enter the title of the book: ");
+                //     String title= myobj.nextLine();
     
-                    System.out.println("Enter the author of the book: ");
-                    String author= myobj.nextLine();
+                //     System.out.println("Enter the author of the book: ");
+                //     String author= myobj.nextLine();
     
-                    System.out.println("Enter the year of publication of the book: ");
-                    String year=myobj.nextLine();
+                //     System.out.println("Enter the year of publication of the book: ");
+                //     String year=myobj.nextLine();
 
-                    Book book= new Book(title,author,year);
-                    library.addBook(book);
-                    break;
-                case 2:
-                    System.out.println("Enter the ID of book to be edited: ");
-                   int viewID=myobj.nextInt();
-                   library.editBook(viewID);
-                    break;
+                //     Book book= new Book(title,author,year);
+                //     library.addBook(book);
+                //     break;
+                // case 2:
+                //     System.out.println("Enter the ID of book to be edited: ");
+                //    int viewID=myobj.nextInt();
+                //    library.editBook(viewID);
+                //     break;
                 case 3:
                    System.out.println("Enter the ID of book to be deleted: ");
                    int ID=myobj.nextInt();
-                   library.deleteBookByID(ID);
+                   library.deleteItemByID(ID);
 
                     break;
                 case 4:
-                    library.viewAllBooks();
+                    library.viewAllItems();
                     break;
                 case 5:
                      System.out.println("Enter the ID of book to be viewed: ");
                    int id=myobj.nextInt();
-                   library.viewBookByID(id);
+                   library.viewItemByID(id);
                     break;
                 case 6:
-                    library.ScanBooks();
+                    library.ScanItems();
                     System.out.println("Books loaded");
                     break;
                 case 7:
-                    System.out.println("Exit");
+                    
+                    library.HotPicks();
+                    library.viewAllItems();;
+                    break;
+                case 8:
+                    System.out.println("Enter your name: ");
+                   String name=myobj.nextLine();
+                    if(library.borrowItem(name)){
+                          System.out.println("Item Borrowed Successfully");
+                    }
+                    else{
+                        System.out.println("Try again.");
+                    }
+                    break;
+                case 9:
+                    System.out.println("Borrowers List: ");
+                    library.borrowersList();
+                    break;
+                case 0:
+                    
+                     System.out.println("exit");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -204,7 +431,7 @@ public class Main{
             }
           
             
-        } while (choice != 7);
+        } while (choice != 0);
          myobj.close();
        
 
