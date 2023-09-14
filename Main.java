@@ -30,8 +30,9 @@ class Item implements Configuration{
  }
     @Override
     public void displayInfo(){
-          System.out.println("Item Info: ");
+          
           System.out.println("Title: "+title+"  Popularity Count: "+popCount+" Cost: "+cost);
+          
 
     }
     @Override
@@ -112,10 +113,62 @@ class Library{
         
         Collections.sort(items, popularityComparator);
     }
-    public void addItem(Item i){
+    public void addBook(){
+              Scanner obj= new Scanner(System.in);
+              System.out.println("Enter the title of the book: ");
+              String title=obj.nextLine();
+              System.out.println("Enter the Author of the book: ");
+              String author=obj.nextLine();
+              System.out.println("Enter the year of publishing of the book: ");
+              String year=obj.nextLine();
+              System.out.println("Enter the Popularity count of the book: ");
+              int popc=obj.nextInt();
+              System.out.println("Enter the price of the book: ");
+              int price=obj.nextInt();
 
-         items.add(i);
+              Book book= new Book(title, author, year, false, popc, price);
+              items.add(book);
+              obj.close();
     }
+    public void addMagazine(){
+        Scanner obj= new Scanner(System.in);
+        System.out.println("Enter the title of the Magazine: ");
+        String title=obj.nextLine();
+        System.out.println("Enter the  publisher company of the Magazine: ");
+        String pub=obj.nextLine();
+        System.out.println("Enter the Popularity count of the book: ");
+        int popc=obj.nextInt();
+        System.out.println("Enter the price of the book: ");
+        int price=obj.nextInt();
+        Magazine magazine= new Magazine(title, pub, false, popc, price);
+
+        System.out.println("Enter the no of Authors of the Magazine: ");
+        int size=obj.nextInt();
+
+        for(int i=0; i<size; i++){
+            System.out.println("Enter name of Author "+i+" :");
+            String name=obj.nextLine();
+             magazine.addAuthor(name);
+        }
+    
+        items.add(magazine);
+        obj.close();
+}
+public void addNewspaper(){
+    Scanner obj= new Scanner(System.in);
+    System.out.println("Enter the title of the Newspaper: ");
+    String title=obj.nextLine();
+    System.out.println("Enter the  publisher company of the Magazine: ");
+    String pub=obj.nextLine();
+    System.out.println("Enter the date of the Newspaper: ");
+    String date=obj.nextLine();
+    
+    System.out.println("Enter the Popularity count of the book: ");
+    int popc=obj.nextInt(); 
+    NewsPaper news= new NewsPaper(title, pub, date, false, popc);
+    items.add(news);
+    obj.close();
+}
     public void viewItemByID(int ID){
           for(int i=0; i<items.size(); i++ ){
             if(items.get(i).id==ID){
@@ -278,6 +331,7 @@ class Book extends Item{
     }
     @Override
     public void displayInfo() {
+       super.displayInfo();
        System.out.println("ID: "+id+" Title: "+title+" by "+author+" ("+year+") ");
     }
     @Override
@@ -313,7 +367,10 @@ class Magazine extends Item{
     }
     @Override
     public void displayInfo(){
+        super.displayInfo();
         System.out.println("Magazine ID: "+this.id+" Company: "+this.publisherCompany);
+        System.out.println("Authors: "+ authors);
+      
     }
    
 };
@@ -335,6 +392,12 @@ class NewsPaper extends Item{
    
      public void setCompany(String y){
         this.publisherCompany=y;
+    }
+    @Override
+    public void displayInfo(){
+        super.displayInfo();
+        System.out.println("Newspaper ID: "+this.id+" Date: "+this.Date+" Publisher company: "+publisherCompany);
+
     }
       @Override
     public double calculateCost(){
@@ -372,26 +435,29 @@ public class Main{
             myobj.nextLine();
             }
             switch (choice) {
-                // case 1:
-                //     System.out.println("Enter the title of the book: ");
-                //     String title= myobj.nextLine();
-    
-                //     System.out.println("Enter the author of the book: ");
-                //     String author= myobj.nextLine();
-    
-                //     System.out.println("Enter the year of publication of the book: ");
-                //     String year=myobj.nextLine();
-
-                //     Book book= new Book(title,author,year);
-                //     library.addBook(book);
-                //     break;
+                case 1:
+                    System.out.println("What type of item you want to add? (Book, Magazine, Newspaper): ");
+                    String type= myobj.nextLine();
+                    if(type=="Book"){
+                        library.addBook();
+                    }
+                    else if(type=="Magazine"){
+                        library.addMagazine();
+                    }
+                    else if(type=="Newspaper"){
+                        library.addNewspaper();
+                    } 
+                    else{
+                        System.out.println("Invalid Type");
+                    }
+                    break;
                 case 2:
-                   System.out.println("Enter the ID of book to be edited: ");
+                   System.out.println("Enter the ID of Item to be edited: ");
                    int viewID=myobj.nextInt();
                    library.editItem(viewID);
                     break;
                 case 3:
-                   System.out.println("Enter the ID of book to be deleted: ");
+                   System.out.println("Enter the ID of Item to be deleted: ");
                    int ID=myobj.nextInt();
                    library.deleteItemByID(ID);
 
@@ -400,13 +466,13 @@ public class Main{
                     library.viewAllItems();
                     break;
                 case 5:
-                     System.out.println("Enter the ID of book to be viewed: ");
+                     System.out.println("Enter the ID of Item to be viewed: ");
                    int id=myobj.nextInt();
                    library.viewItemByID(id);
                     break;
                 case 6:
                     library.ScanItems();
-                    System.out.println("Books loaded");
+                    System.out.println("Items loaded");
                     break;
                 case 7:
                     
