@@ -531,16 +531,19 @@ public class Main{
                 case 3:
                    System.out.println("Enter the ID of Item to be deleted: ");
                    int ID=myobj.nextInt();
-                   library.deleteItemByID(ID);
+                   library.deleteItemByID(ID); 
+                   System.out.println();
 
                     break;
                 case 4:
                     library.viewAllItems();
+                    System.out.println();
                     break;
                 case 5:
                      System.out.println("Enter the ID of Item to be viewed: ");
                    int id=myobj.nextInt();
                    library.viewItemByID(id);
+                   System.out.println();
                     break;
                 case 6:
                     library.ScanItems();
@@ -556,18 +559,22 @@ public class Main{
                    String name=myobj.nextLine();
                     if(library.borrowItem(name)==true){
                           System.out.println("Item Borrowed Successfully");
+                          System.out.println();
                     }
                     else{
                         System.out.println("Try again.");
+                        System.out.println();
                     }
                     break;
                 case 9:
                     System.out.println("Borrowers List: ");
                     library.borrowersList();
+                    System.out.println();
                     break;
                 case 0:
                     
-                     System.out.println("exit");
+                     System.out.println("exiting");
+                     System.out.println();
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
