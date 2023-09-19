@@ -21,12 +21,19 @@ class Item implements Configuration{
         popCount=p;
         cost=c;
 
+
+    }
+    public int gettype(){
+       return this.gettype();
     }
  public int getcost(){
     return this.cost;
  }
  public void setTitle(String t){
     this.title=t;
+ }
+ public String getTitle(){
+    return this.title;
  }
  public void setPopCount(){
       popCount=popCount+1;
@@ -74,22 +81,33 @@ class Library{
         for(int i=0; i<items.size(); i++){
                 if(items.get(i).isBorrowed==false){
                      items.get(i).displayInfo();
+                     System.out.println();
                 }
         }
         Scanner obj=new Scanner(System.in);
         System.out.println("Enter the title of item you want to borrow");
         String tit= obj.nextLine();
-        System.out.println(tit);
         double cost=0.0;
         for(int i=0; i<items.size(); i++){
 
-                if(items.get(i).title.equalsIgnoreCase(tit)){
-                    for(int j=0; j<borrowers.size(); j++){
+                if(items.get(i).getTitle().equalsIgnoreCase(tit)){
+                    if(borrowers.isEmpty()){
+                        items.get(i).isBorrowed=true;
+                              items.get(i).setPopCount();
+                              cost= items.get(i).calculateCost();
+                            System.out.println("Item Borrowing Cost: "+cost);
+                            items.get(i).displayInfo();
+                              break;
+                    }
+                    else{
+                        for(int j=0; j<borrowers.size(); j++){
                         if(borrowers.get(j).name.equalsIgnoreCase(n) && borrowers.get(j).borrowedTitle.equalsIgnoreCase(tit)){
                             System.out.println("This user has already borrowed that book once.");
                             return false;
                         }
+                        
                         else{
+                            
                               items.get(i).isBorrowed=true;
                               items.get(i).setPopCount();
                               cost= items.get(i).calculateCost();
@@ -98,12 +116,10 @@ class Library{
                               break;
                         }
                     }
+                }
                      
                 }
-                else{
-                    System.out.println("Invalid title");
-                    return false;
-                }
+               
         }
         Borrower b= new Borrower(n, tit);
         borrowers.add(b);
@@ -156,10 +172,12 @@ class Library{
         int size=obj.nextInt();
 
         for(int i=0; i<size; i++){
-            System.out.println("Enter name of Author "+i+" :");
+            obj.nextLine();
+            System.out.println("Enter name of Author "+(i+1)+" :");
             String name=obj.nextLine();
-            obj.next();
+           
              magazine.addAuthor(name);
+        
         }
     
         items.add(magazine);
@@ -191,10 +209,12 @@ public void addNewspaper(){
         System.out.println("Items: ");
          for(int i=0; i<items.size(); i++ ){
             items.get(i).displayInfo();
+            System.out.println();
          }
     }
     public void viewItem(Item i){
         i.displayInfo();
+        System.out.println();
     }
     
     public void deleteItemByID(int ID){
@@ -222,11 +242,23 @@ public void editItem(int ID){
                 System.out.println("Title Updated");
                 break;
                 // case 2:
+                // if(items.get(i).gettype()==2){
+                //     System.out.println("Which Author you want to edit?");
+                //     String name=input.nextLine();
+                //      System.out.println("Edited Author name: ");
+                //     String Editedname=input.nextLine();
+                //     items.get(i).updateAuthor(name, Editedname);
+
+
+                // }
+                // else{
                 // System.out.println("Enter new author: ");
                 // String author= input.nextLine();
                 // items.get(i).setAuthor(author);
+                // }
                 // System.out.println("Author Updated");
-              //  break;
+                
+               //break;
                 default:
                  System.out.println("Invalid choice. Please try again.");
                     break;
@@ -339,6 +371,10 @@ class Book extends Item{
         this.year=y;
     }
     @Override
+     public int gettype(){
+        return type;
+    }
+    @Override
     public void displayInfo() {
        super.displayInfo();
        System.out.println("ID: "+id+" Title: "+title+" by "+author+" ("+year+") ");
@@ -369,6 +405,19 @@ class Magazine extends Item{
      public void setCompany(String y){
         this.publisherCompany=y;
     }
+    public void updateAuthor(String oldAuth, String newAuth){
+            for(int i=0; i<authors.size(); i++){
+                if(authors.get(i)==oldAuth){
+                    authors.set(i, newAuth);
+                }
+            }
+
+
+    }
+    @Override
+     public int gettype(){
+        return type;
+    }
      @Override
     public double calculateCost(){
     
@@ -395,6 +444,10 @@ class NewsPaper extends Item{
     type=3;
     publisherCompany=y;
      Date=d;
+    }
+    @Override
+    public int gettype(){
+        return type;
     }
     public void setDate(String d){
         Date=d;
@@ -423,7 +476,7 @@ public class Main{
         int choice=0;
          Scanner myobj = new Scanner(System.in);
         do {
-           
+            System.out.println("_____________________________________________");
             System.out.println("Library Management System Menu:");
             System.out.println("1. Add Item");
             System.out.println("2. Edit Item");
@@ -435,6 +488,9 @@ public class Main{
             System.out.println("8. Borrow item");
             System.out.println("9. View Borrowers List");
             System.out.println("0. Exit");
+             System.out.println("_____________________________________________");
+             System.out.println();
+             System.out.println();
             System.out.print("Enter your choice: ");
             if(myobj.hasNextInt()) 
             {
@@ -450,12 +506,18 @@ public class Main{
                     System.out.println(type);
                     if(type.equalsIgnoreCase("Book")){
                         library.addBook();
+                        System.out.println("Book Added Successfully");
+                        System.out.println();
                     }
                     else if(type.equalsIgnoreCase("Magazine")){
                         library.addMagazine();
+                        System.out.println("Magazine Added Successfully");
+                        System.out.println();
                     }
                     else if(type.equalsIgnoreCase("Newspaper")){
                         library.addNewspaper();
+                        System.out.println("Newspaper added Successfully");
+                        System.out.println();
                     } 
                     else{
                         System.out.println("Invalid Type");
@@ -492,7 +554,7 @@ public class Main{
                 case 8:
                     System.out.println("Enter your name: ");
                    String name=myobj.nextLine();
-                    if(library.borrowItem(name)){
+                    if(library.borrowItem(name)==true){
                           System.out.println("Item Borrowed Successfully");
                     }
                     else{
