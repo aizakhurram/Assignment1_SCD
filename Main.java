@@ -28,6 +28,9 @@ class Item implements Configuration{
  public void setTitle(String t){
     this.title=t;
  }
+ public void setPopCount(){
+      popCount=popCount+1;
+ }
     @Override
     public void displayInfo(){
           
@@ -77,6 +80,7 @@ class Library{
         System.out.println("Enter the title of item you want to borrow");
         String tit= obj.nextLine();
         System.out.println(tit);
+        double cost=0.0;
         for(int i=0; i<items.size(); i++){
 
                 if(items.get(i).title.equalsIgnoreCase(tit)){
@@ -87,7 +91,10 @@ class Library{
                         }
                         else{
                               items.get(i).isBorrowed=true;
-                              items.get(i).popCount++;
+                              items.get(i).setPopCount();
+                              cost= items.get(i).calculateCost();
+                            System.out.println("Item Borrowing Cost: "+cost);
+                            items.get(i).displayInfo();
                               break;
                         }
                     }
@@ -100,6 +107,8 @@ class Library{
         }
         Borrower b= new Borrower(n, tit);
         borrowers.add(b);
+       
+
 
         return true;
     }
@@ -107,7 +116,6 @@ class Library{
         Comparator<Item> popularityComparator = new Comparator<Item>() {
             @Override
             public int compare(Item item1, Item item2) {
-                // Compare items based on their popularity counts
                 return item2.popCount - item1.popCount;
             }
         };
@@ -341,6 +349,7 @@ class Book extends Item{
     return super.cost+percentage+200;
      
     }
+
 };
 class Magazine extends Item{
     public static int nextID=1;
