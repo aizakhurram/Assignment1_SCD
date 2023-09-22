@@ -230,42 +230,11 @@ public void editItem(int ID){
      Scanner input = new Scanner(System.in);
          for(int i=0; i<items.size(); i++ ){
             if(items.get(i).id==ID){
-              System.out.println("What property you want to edit? ");
-              System.out.println("Press 1 for title, 2 for author.");
-              int choice= input.nextInt();
-              input.nextLine();
-              switch (choice){
-                case 1:
+             
                 System.out.println("Enter new title: ");
                 String title= input.nextLine();
                 items.get(i).setTitle(title);
                 System.out.println("Title Updated");
-                break;
-                // case 2:
-                // if(items.get(i).gettype()==2){
-                //     System.out.println("Which Author you want to edit?");
-                //     String name=input.nextLine();
-                //      System.out.println("Edited Author name: ");
-                //     String Editedname=input.nextLine();
-                //     items.get(i).updateAuthor(name, Editedname);
-
-
-                // }
-                // else{
-                // System.out.println("Enter new author: ");
-                // String author= input.nextLine();
-                // items.get(i).setAuthor(author);
-                // }
-                // System.out.println("Author Updated");
-                
-               //break;
-                default:
-                 System.out.println("Invalid choice. Please try again.");
-                    break;
-
-
-              }
-             
             }
             else{
                 continue;
@@ -285,11 +254,13 @@ public void ScanItems(){
             
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
+        
                 String[] parts = line.split(", "); 
 
                
                     
                     int itemType = Integer.parseInt(parts[0]);
+                
                     if(itemType==1){
                     String itemTitle = parts[1];
                     String itemAuthor= parts[2];
@@ -338,7 +309,7 @@ public void ScanItems(){
                      items.add(news);
                      }
             }
-                scanner.close();
+
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + e.getMessage());
         }
@@ -377,7 +348,7 @@ class Book extends Item{
     @Override
     public void displayInfo() {
        super.displayInfo();
-       System.out.println("ID: "+id+" Title: "+title+" by "+author+" ("+year+") ");
+       System.out.println("ID: "+id+" Title: "+title+" Author: "+author+" year: ("+year+") ");
     }
     @Override
     public double calculateCost(){
