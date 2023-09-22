@@ -1,0 +1,9 @@
+1, Harry_potter, JK_Rowling, 1990, 2, 800
+1, Matilda, Roald_dahl, 1988, 2, 700
+1, The_Emergency, thomas, 2003, 5, 500
+2, magazine_title, author1_name, author2_name, author3_name., publisher_company, 10, 500
+2, RedBook, john, anna, george., Hearst_Communication, 1, 250
+2, Vogue, one, two., Media_production, 6, 100
+3, newspaper_title, publisher_company, 1, 20-09-2023
+3, Dunya, abc, 4, 23-09-2023
+3, Daily_jang, times, 4, 19-09-2023
